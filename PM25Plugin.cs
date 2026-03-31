@@ -50,16 +50,20 @@ namespace DNWS
                 }
             }
 
-            HTTPResponse response = null;
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<html><body>");
-            sb.Append("Location : " + pm25reading.data.city.name + "<br />");
-            sb.Append("Date/Time : " + pm25reading.data.time.iso + "<br />");
-            sb.Append("PM25 : " + pm25reading.data.iaqi.pm25.v + "<br />");
-            sb.Append("PM10 : " + pm25reading.data.iaqi.pm10.v + "<br />");
-            sb.Append("</body></html>");
-            response = new HTTPResponse(200);
-            response.body = Encoding.UTF8.GetBytes(sb.ToString());
+            HTTPResponse response = new HTTPResponse(200);
+
+            // JSONレスポンスに変更
+            string json = "{"
+                + "\"data\": {"
+                + "\"city\": {\"name\": \"" + pm25reading.data.city.name + "\"},"
+                + "\"iaqi\": {"
+                + "\"pm25\": {\"v\": " + pm25reading.data.iaqi.pm25.v + "},"
+                + "\"pm10\": {\"v\": " + pm25reading.data.iaqi.pm10.v + "}"
+                + "}"
+                + "}"
+                + "}";
+
+            response.body = Encoding.UTF8.GetBytes(json);
             return response;
         }
 
